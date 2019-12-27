@@ -64,8 +64,8 @@ set smartindent
 set tabstop=4
 set softtabstop=4
 " 去掉vi一致性模式
-set nocompatible
-set backspace=indent,start
+" set nocompatible
+" set backspace=indent,start
 " 开启真色
 set termguicolors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -115,7 +115,7 @@ autocmd bufnewfile *.py call HeaderPython()
 
 function HeaderShell()
 		call setline(1, "#!/usr/bin/env bash")
-		call append(1, "Author: MinuteSheep<minutesheep@163.com>")
+		call append(1, "# Author: MinuteSheep<minutesheep@163.com>")
 		normal G
 		normal 3o
 endf
@@ -129,7 +129,7 @@ map R :call CompileAndRun()<CR>
 func! CompileAndRun()
 		exec "w"
 		if &filetype == 'c'
-				exec "!g++ % -o %<"
+				exec "!gcc % -o %<"
 				exec "!time ./%<"
 		elseif &filetype == 'cpp'
 				set splitbelow
@@ -186,7 +186,7 @@ Plug 'AndrewRadev/switch.vim'  " press gs to switch ture/false
 Plug 'scrooloose/nerdcommenter'
 
 " Auto Complete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " remember  :CocCommand python.setInterpreter
 Plug 'godlygeek/tabular'
 
@@ -212,7 +212,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'vim-airline/vim-airline'
 
 " Theme
-" Plug 'hzchirs/vim-material'
+Plug 'hzchirs/vim-material'
 " Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'ajmwagar/vim-deus'
 
@@ -307,25 +307,25 @@ let g:undotree_ShortIndicators = 1
 "-------- -------- -------- -------- -------- --------
 " Coc
 "-------- -------- -------- -------- -------- --------
-silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
-let g:coc_global_extensions = ['coc-python', 'coc-vimlsp', 'coc-html',
-						\ 'coc-json', 'coc-css', 'coc-tsserver',
-						\'coc-yank', 'coc-lists', 'coc-gitignore',
-						\'coc-vimlsp', 'coc-tailwindcss', 'coc-stylelint']
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-" use <tab> for trigger completion and navigate to the next complete item
-function! s:check_back_space() abort
-		let col = col('.') - 1
-		return !col || getline('.')[col - 1]	=~ '\s'
-endfunction
-inoremap <silent><expr> <Tab>
-						\ pumvisible() ? "\<C-n>" :
-						\ <SID>check_back_space() ? "\<Tab>" :
-						\ coc#refresh()
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <silent><expr> <c-space> coc#refresh()
-nmap <silent> gd <Plug>(coc-definition)
-nmap <leader>rn <Plug>(coc-rename)
+" silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
+" let g:coc_global_extensions = ['coc-python', 'coc-vimlsp', 'coc-html',
+						" \ 'coc-json', 'coc-css', 'coc-tsserver',
+						" \'coc-yank', 'coc-lists', 'coc-gitignore',
+						" \'coc-vimlsp', 'coc-tailwindcss', 'coc-stylelint']
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" " use <tab> for trigger completion and navigate to the next complete item
+" function! s:check_back_space() abort
+		" let col = col('.') - 1
+		" return !col || getline('.')[col - 1]	=~ '\s'
+" endfunction
+" inoremap <silent><expr> <Tab>
+						" \ pumvisible() ? "\<C-n>" :
+						" \ <SID>check_back_space() ? "\<Tab>" :
+						" \ coc#refresh()
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <silent><expr> <c-space> coc#refresh()
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <leader>rn <Plug>(coc-rename)
 
 
 "-------- -------- -------- -------- -------- --------

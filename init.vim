@@ -45,16 +45,16 @@ endif
 " -------- -------- -------- -------- -------- --------
 "  基本设置
 " -------- -------- -------- -------- -------- --------
-syntax on
+" syntax on
 " vim自身命名行模式智能补全
-set wildmenu
+" set wildmenu
 " 让vim可以使用系统的剪切板
 set clipboard=unnamed
 " 设置行号
 set number
 set relativenumber
 " 自动设当前编辑文件所在目录为当前工作目录
-set autochdir
+" set autochdir
 " 高亮第80列
 set cc=80
 " 自动缩进
@@ -94,7 +94,7 @@ autocmd FileType php setlocal tabstop=4 shiftwidth=4
 						\ softtabstop=4 textwidth=80
 autocmd FileType coffee,javascript setlocal tabstop=2
 						\ shiftwidth=2 softtabstop=2 textwidth=80
-autocmd FileType python setlocal tabstop=4 shiftwidth=4
+autocmd FileType python,markdown setlocal tabstop=4 shiftwidth=4
 						\ softtabstop=4 textwidth=80
 autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2
 						\ shiftwidth=2 softtabstop=2 textwidth=80
@@ -107,7 +107,7 @@ autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2
 " -------- -------- -------- -------- -------- --------
 function HeaderPython()
 		call setline(1, "#!/usr/bin/env python")
-		call append(1, "#-*- coding:utf-8 -*-")
+		call append(1, "#-*- coding:UTF-8 -*-")
 		normal G
 		normal 3o
 endf
@@ -164,10 +164,6 @@ endfunc
 " -------- -------- -------- -------- -------- --------
 call plug#begin('~/.config/nvim/plugged')
 
-" Markdown
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-
-
 " Python
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
@@ -176,6 +172,9 @@ Plug 'easymotion/vim-easymotion'
 
 " Undo Tree
 Plug 'mbbill/undotree'
+
+" Bookmarks
+Plug 'MattesGroeger/vim-bookmarks'
 
 " Editor Enhancement
 Plug 'jiangmiao/auto-pairs'
@@ -189,6 +188,9 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " remember  :CocCommand python.setInterpreter
 Plug 'godlygeek/tabular'
+
+" Markdown
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
 " Formatter
 Plug 'Chiel92/vim-autoformat'
@@ -331,7 +333,7 @@ let g:undotree_ShortIndicators = 1
 "-------- -------- -------- -------- -------- --------
 " AutoFormater
 "-------- -------- -------- -------- -------- --------
-nnoremap /f :Autoformat<CR>
+nnoremap ff :Autoformat<CR>
 
 
 " -------- -------- -------- -------- -------- --------
@@ -402,8 +404,21 @@ let g:ctrlp_cmd = 'CtrlP'
 
 
 " -------- -------- -------- -------- -------- --------
+"  BookMarks
+" -------- -------- -------- -------- -------- --------
+let g:bookmark_sign = '¶'                       
+let g:bookmark_annotation_sign = '§'            
+let g:bookmark_auto_close = 1                   
+let g:bookmark_highlight_lines = 1              
+let g:bookmark_center = 1                       
+highlight link BookmarkLine SpellBad            
+highlight link BookmarkAnnotationLine SpellBad  
+
+
+" -------- -------- -------- -------- -------- --------
 "  Open the _machine_specific.vim file if it has just been created
 " -------- -------- -------- -------- -------- --------
 if has_machine_specific_file == 0
 		exec "e ~/.config/nvim/_machine_specific.vim"
 endif
+

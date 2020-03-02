@@ -45,7 +45,7 @@ endif
 " -------- -------- -------- -------- -------- --------
 "  基本设置
 " -------- -------- -------- -------- -------- --------
-" syntax on
+syntax on
 " vim自身命名行模式智能补全
 " set wildmenu
 " 让vim可以使用系统的剪切板
@@ -55,20 +55,20 @@ set number
 set relativenumber
 " 自动设当前编辑文件所在目录为当前工作目录
 " set autochdir
-" 高亮第80列
-set cc=80
+" 高亮第81列
+set cc=81
+" tab大小
+set ts=4
+set expandtab
 " 自动缩进
 set autoindent
 set smartindent
-" tab大小
-set tabstop=4
-set softtabstop=4
 " 去掉vi一致性模式
 " set nocompatible
 " set backspace=indent,start
-" 开启真色
-set termguicolors
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" 开启真色,MacOs Terminal不需要开启真色
+" set termguicolors
+" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 
 " -------- -------- -------- -------- -------- --------
@@ -78,7 +78,8 @@ noremap H 0
 noremap L $
 noremap J 5j
 noremap K 5k
-noremap M J
+noremap U <nop>
+noremap U J
 noremap s <nop>
 let mapleader=" "
 
@@ -110,14 +111,10 @@ map R :call CompileAndRun()<CR>
 func! CompileAndRun()
 		exec "w"
 		if &filetype == 'c'
-				exec "!gcc % -o %<"
-				exec "!time ./%<"
+				exec "!gcc % -o %< && ./%<"
 		elseif &filetype == 'cpp'
 				set splitbelow
-				exec "!g++ -std=c++11 % -Wall -o %<"
-				:sp
-				:res -15
-				:term ./%<
+				exec "!g++ -std=c++11 % -Wall -o %< && ./%<"
 		elseif &filetype == 'java'
 				exec "!javac %"
 				exec "!time java %<"
@@ -158,7 +155,7 @@ Plug 'mbbill/undotree'
 Plug 'MattesGroeger/vim-bookmarks'
 
 " Editor Enhancement
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'AndrewRadev/switch.vim'  " press gs to switch ture/false
 
@@ -177,13 +174,23 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'Chiel92/vim-autoformat'
 
 " File navigation
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+" if has('nvim')
+  " Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+  " Plug 'Shougo/defx.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'roxma/vim-hug-neovim-rpc'
+" endif
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Git
 Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Table
+Plug 'dhruvasagar/vim-table-mode'
 
 " Rainbow
 Plug 'luochen1990/rainbow'
@@ -194,10 +201,6 @@ Plug 'Yggdroot/indentLine'
 " Vim-airline
 Plug 'vim-airline/vim-airline'
 
-" Theme
-Plug 'hzchirs/vim-material'
-" Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'ajmwagar/vim-deus'
 
 call plug#end()
 
@@ -205,13 +208,13 @@ call plug#end()
 "-------- -------- -------- -------- -------- --------
 " NerdTree
 "-------- -------- -------- -------- -------- --------
-noremap <silent> tt :NERDTreeToggle<CR>
-" 退出最后一个文件则自动关闭目录
-autocmd bufenter * if (winnr("$") == 1
-						\ && exists("b:NERDTree")
-						\ && b:NERDTree.isTabTree()) | q | endif
-" 在终端启动vim时，共享NERDTree
-let g:nerdtree_tabs_open_on_console_startup=1
+" noremap <silent> tt :NERDTreeToggle<CR>
+" " 退出最后一个文件则自动关闭目录
+" autocmd bufenter * if (winnr("$") == 1
+						" \ && exists("b:NERDTree")
+						" \ && b:NERDTree.isTabTree()) | q | endif
+" " 在终端启动vim时，共享NERDTree
+" let g:nerdtree_tabs_open_on_console_startup=1
 
 " Default  Description~
 " Key~
@@ -328,29 +331,6 @@ let g:rainbow_active = 1
 "-------- -------- -------- -------- -------- --------
 let g:indentLine_color_term = 239
 let g:indentLine_char = '┊'
-
-
-" -------- -------- -------- -------- -------- --------
-"  Theme (Choose one you like)
-" -------- -------- -------- -------- -------- --------
-" Dark
-" set background=dark
-" colorscheme vim-material
-" Palenight
-" let g:material_style='palenight'
-" set background=dark
-" colorscheme vim-material
-" Oceanic
-" let g:material_style='oceanic'
-" set background=dark
-" colorscheme vim-material
-" Light
-" set background=light
-" colorscheme vim-material
-" onehalflight
-" colorscheme onehalflight
-color deus
-hi NonText ctermfg=gray guifg=grey10
 
 
 " -------- -------- -------- -------- -------- --------

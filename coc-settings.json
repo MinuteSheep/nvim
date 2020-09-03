@@ -1,0 +1,18 @@
+{
+        "coc.preferences.extensionUpdateCheck": "daily",
+        "suggest.noselect": true,
+        "suggest.enablePreselect": false,
+        "diagnostic.enable": false,
+        "diagnostic.signOffset": 1,
+        "diagnostic.displayByAle": false,
+        "diagnostic.refreshOnInsertMode": false,
+        "diagnostic.refreshAfterSave": false,
+        "diagnostic.checkCurrentLine": true,
+        "diagnostic.virtualText": true,
+        "codeLens.enable": true,
+        "coc.preferences.formatOnSaveFiletypes": [
+                "json",
+                "python"
+        ],
+        "clangd.path": "/Users/minutesheep/.config/coc/extensions/coc-clangd-data/install/10.0.0/clangd_10.0.0/bin/clangd"
+}

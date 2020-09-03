@@ -10,23 +10,17 @@
 "  首次自动配置
 " -------- -------- -------- -------- -------- --------
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+        silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+                                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 
 " -------- -------- -------- -------- -------- --------
 "  Python 环境
 " -------- -------- -------- -------- -------- --------
-let has_machine_specific_file = 1
-if empty(glob('~/.config/nvim/_machine_specific.vim'))
-		let has_machine_specific_file = 0
-		silent! exec "!cp ~/.config/nvim/default_configs/
-								\_machine_specific_default.vim
-								\ ~/.config/nvim/_machine_specific.vim"
-endif
-source ~/.config/nvim/_machine_specific.vim
+let g:python_host_prog = '~/.pyenv/versions/nvim2/bin/python'
+let g:python3_host_prog = '~/.pyenv/versions/nvim3/bin/python'
 
 
 " -------- -------- -------- -------- -------- --------
@@ -37,17 +31,16 @@ silent !mkdir -p ~/.config/nvim/tmp/undo
 set backupdir=~/.config/nvim/tmp/backup,.
 set directory=~/.config/nvim/tmp/backup,.
 if has('persistent_undo')
-		set undofile
-		set undodir=~/.config/nvim/tmp/undo,.
+        set undofile
+        set undodir=~/.config/nvim/tmp/undo,.
 endif
 
 
 " -------- -------- -------- -------- -------- --------
 "  基本设置
 " -------- -------- -------- -------- -------- --------
+" 语法高亮
 syntax on
-" vim自身命名行模式智能补全
-" set wildmenu
 " 让vim可以使用系统的剪切板
 set clipboard=unnamed
 " 设置行号
@@ -65,7 +58,7 @@ set autoindent
 set smartindent
 " 去掉vi一致性模式
 " set nocompatible
-" set backspace=indent,start
+set backspace=indent,start
 " 开启真色,MacOs Terminal不需要开启真色
 " set termguicolors
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -81,6 +74,7 @@ noremap K 5k
 noremap U <nop>
 noremap U J
 noremap s <nop>
+inoremap <S-CR> <Esc>o
 let mapleader=" "
 
 
@@ -88,18 +82,18 @@ let mapleader=" "
 "  auto add head info
 " -------- -------- -------- -------- -------- --------
 function HeaderPython()
-		call setline(1, "#!/usr/bin/env python")
-		call append(1, "#-*- coding:UTF-8 -*-")
-		normal G
-		normal 3o
+        call setline(1, "#!/usr/bin/env python")
+        call append(1, "#-*- coding:UTF-8 -*-")
+        normal G
+        normal 3o
 endf
 autocmd bufnewfile *.py call HeaderPython()
 
 function HeaderShell()
-		call setline(1, "#!/usr/bin/env bash")
-		call append(1, "# Author: MinuteSheep<minutesheep@163.com>")
-		normal G
-		normal 3o
+        call setline(1, "#!/usr/bin/env bash")
+        call append(1, "# Author: MinuteSheep<minutesheep@163.com>")
+        normal G
+        normal 3o
 endf
 autocmd bufnewfile *.sh call HeaderShell()
 
@@ -109,31 +103,31 @@ autocmd bufnewfile *.sh call HeaderShell()
 "-------- -------- -------- -------- -------- --------
 map R :call CompileAndRun()<CR>
 func! CompileAndRun()
-		exec "w"
-		if &filetype == 'c'
-				exec "!gcc % -o %< && ./%<"
-		elseif &filetype == 'cpp'
-				set splitbelow
-				exec "!g++ -std=c++11 % -Wall -o %< && ./%<"
-		elseif &filetype == 'java'
-				exec "!javac %"
-				exec "!time java %<"
-		elseif &filetype == 'sh'
-				:!time bash %
-		elseif &filetype == 'python'
-				exec "!python % "
-		elseif &filetype == 'html'
-				silent! exec "!chromium % &"
-		elseif &filetype == 'markdown'
-				exec "MarkdownPreview"
-		elseif &filetype == 'tex'
-				silent! exec "VimtexStop"
-				silent! exec "VimtexCompile"
-		elseif &filetype == 'go'
-				set splitbelow
-				:sp
-				:term go run %
-		endif
+        exec "w"
+        if &filetype == 'c'
+                exec "!gcc % -o %< && ./%<"
+        elseif &filetype == 'cpp'
+                set splitbelow
+                exec "!g++ -std=c++11 % -Wall -o %< && ./%<"
+        elseif &filetype == 'java'
+                exec "!javac %"
+                exec "!time java %<"
+        elseif &filetype == 'sh'
+                :!time bash %
+        elseif &filetype == 'python'
+                exec "!python % "
+        elseif &filetype == 'html'
+                silent! exec "!chromium % &"
+        elseif &filetype == 'markdown'
+                exec "MarkdownPreview"
+        elseif &filetype == 'tex'
+                silent! exec "VimtexStop"
+                silent! exec "VimtexCompile"
+        elseif &filetype == 'go'
+                set splitbelow
+                :sp
+                :term go run %
+        endif
 endfunc
 
 
@@ -141,9 +135,6 @@ endfunc
 "  vim-plug
 " -------- -------- -------- -------- -------- --------
 call plug#begin('~/.config/nvim/plugged')
-
-" Python
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " Move
 Plug 'easymotion/vim-easymotion'
@@ -163,7 +154,7 @@ Plug 'AndrewRadev/switch.vim'  " press gs to switch ture/false
 Plug 'scrooloose/nerdcommenter'
 
 " Auto Complete
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " remember  :CocCommand python.setInterpreter
 Plug 'godlygeek/tabular'
 
@@ -173,21 +164,18 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 " Formatter
 Plug 'Chiel92/vim-autoformat'
 
-" File navigation
-" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-" if has('nvim')
-  " Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-" else
-  " Plug 'Shougo/defx.nvim'
-  " Plug 'roxma/nvim-yarp'
-  " Plug 'roxma/vim-hug-neovim-rpc'
-" endif
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'ctrlpvim/ctrlp.vim'
+" Skin
+Plug 'theniceboy/vim-deus'
 
-" Git
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" File navigation
+if has('nvim')
+        Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+        Plug 'Shougo/defx.nvim'
+        Plug 'roxma/nvim-yarp'
+        Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'kristijanhusak/defx-icons'
 
 " Table
 Plug 'dhruvasagar/vim-table-mode'
@@ -205,80 +193,11 @@ Plug 'vim-airline/vim-airline'
 call plug#end()
 
 
-"-------- -------- -------- -------- -------- --------
-" NerdTree
-"-------- -------- -------- -------- -------- --------
-" noremap <silent> tt :NERDTreeToggle<CR>
-" " 退出最后一个文件则自动关闭目录
-" autocmd bufenter * if (winnr("$") == 1
-						" \ && exists("b:NERDTree")
-						" \ && b:NERDTree.isTabTree()) | q | endif
-" " 在终端启动vim时，共享NERDTree
-" let g:nerdtree_tabs_open_on_console_startup=1
-
-" Default  Description~
-" Key~
-
-" o       Open files, directories and bookmarks
-" go      Open selected file, but leave cursor in the NERDTree
-" t       Open selected node/bookmark in a new tab
-" T       Same as 't' but keep the focus on the current tab
-" i       Open selected file in a split window
-" gi      Same as i, but leave the cursor on the NERDTree
-" s       Open selected file in a new vsplit
-" gs      Same as s, but leave the cursor on the NERDTree
-" O       Recursively open the selected directory
-" x       Close the current nodes parent
-" X       Recursively close all children of the current node
-" e       Edit the current dir
-
-" <CR>               same as |NERDTree-o|
-" double-click       same as the |NERDTree-o| map
-" middle-click       same as |NERDTree-i| for files, same as
-" |NERDTree-e| for dirs
-
-" D       Delete the current bookmark
-
-" P       Jump to the root node
-" p       Jump to current nodes parent
-" K       跳转到与光标相同深度的第一个子节点
-" J       跳转到与光标相同深度的最后一个子节点
-" <C-J>   Jump down to the next sibling of the current directory
-" <C-K>   Jump up to the previous sibling of the current directory
-
-" C       Change the tree root to the selected dir
-" u       Move the tree root up one directory
-" U       Same as 'u' except the old root node is left open
-" r       Recursively refresh the current directory
-" R       Recursively refresh the current root
-" m       Display the NERD tree menu
-" cd      Change the CWD to the dir of the selected node
-" CD      Change tree root to the CWD
-
-" I       Toggle whether hidden files displayed
-" f       Toggle whether the file filters are used
-" F       Toggle whether files are displayed
-" B       Toggle whether the bookmark table is displayed
-
-" q       Close the NERDTree window
-" A       Zoom (maximize/minimize) the NERDTree window
-" ?       Toggle the display of the quick help
-
-
 " -------- -------- -------- -------- -------- --------
-"  NerdGit
+"  Defx
 " -------- -------- -------- -------- -------- --------
-let g:NERDTreeIndicatorMapCustom = {
-						\ "Modified"  : "✹",
-						\ "Staged"    : "✚",
-						\ "Untracked" : "✭",
-						\ "Renamed"   : "➜",
-						\ "Unmerged"  : "═",
-						\ "Deleted"   : "✖",
-						\ "Dirty"     : "✗",
-						\ "Clean"     : "✔︎",
-						\ "Unknown"   : "?"
-						\ }
+source ~/.config/nvim/defx.vim
+noremap <silent> tt :Defx<CR>
 
 
 "-------- -------- -------- -------- -------- --------
@@ -293,25 +212,57 @@ let g:undotree_ShortIndicators = 1
 "-------- -------- -------- -------- -------- --------
 " Coc
 "-------- -------- -------- -------- -------- --------
-" silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
-" let g:coc_global_extensions = ['coc-python', 'coc-vimlsp', 'coc-html',
-						" \ 'coc-json', 'coc-css', 'coc-tsserver',
-						" \'coc-yank', 'coc-lists', 'coc-gitignore',
-						" \'coc-vimlsp', 'coc-tailwindcss', 'coc-stylelint']
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-" " use <tab> for trigger completion and navigate to the next complete item
-" function! s:check_back_space() abort
-		" let col = col('.') - 1
-		" return !col || getline('.')[col - 1]	=~ '\s'
-" endfunction
-" inoremap <silent><expr> <Tab>
-						" \ pumvisible() ? "\<C-n>" :
-						" \ <SID>check_back_space() ? "\<Tab>" :
-						" \ coc#refresh()
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <silent><expr> <c-space> coc#refresh()
-" nmap <silent> gd <Plug>(coc-definition)
-" nmap <leader>rn <Plug>(coc-rename)
+let g:coc_global_extensions = ['coc-json', 'coc-vimlsp', 'coc-python','coc-clangd']
+" TextEdit might fail if hidden is not set.
+set hidden
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=100
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+                        \ pumvisible() ? "\<C-n>" :
+                        \ <SID>check_back_space() ? "\<TAB>" :
+                        \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+        inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+        inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>] <Plug>(coc-diagnostic-next)
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Show documentation in preview window.
+nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+        if (index(['vim','help'], &filetype) >= 0)
+                execute 'h '.expand('<cword>')
+        else
+                call CocAction('doHover')
+        endif
+endfunction
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
 
 "-------- -------- -------- -------- -------- --------
@@ -352,34 +303,19 @@ nmap s <Plug>(easymotion-s2)
 
 
 " -------- -------- -------- -------- -------- --------
-"  FZF
-" -------- -------- -------- -------- -------- --------
-noremap <C-p> :FZF<CR>
-
-
-" -------- -------- -------- -------- -------- --------
-"  CtrlP
-" -------- -------- -------- -------- -------- --------
-let g:ctrlp_map = ''
-let g:ctrlp_cmd = 'CtrlP'
-
-
-" -------- -------- -------- -------- -------- --------
 "  BookMarks
 " -------- -------- -------- -------- -------- --------
-let g:bookmark_sign = '¶'                       
-let g:bookmark_annotation_sign = '§'            
-let g:bookmark_auto_close = 1                   
-let g:bookmark_highlight_lines = 1              
-let g:bookmark_center = 1                       
-highlight link BookmarkLine SpellBad            
-highlight link BookmarkAnnotationLine SpellBad  
+let g:bookmark_sign = '¶'
+let g:bookmark_annotation_sign = '§'
+let g:bookmark_auto_close = 1
+let g:bookmark_highlight_lines = 1
+let g:bookmark_center = 1
+highlight link BookmarkLine SpellBad
+highlight link BookmarkAnnotationLine SpellBad
 
 
 " -------- -------- -------- -------- -------- --------
-"  Open the _machine_specific.vim file if it has just been created
+"  Skin
 " -------- -------- -------- -------- -------- --------
-if has_machine_specific_file == 0
-		exec "e ~/.config/nvim/_machine_specific.vim"
-endif
-
+" color deus
+" colorscheme molokai

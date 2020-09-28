@@ -156,7 +156,7 @@ Plug 'scrooloose/nerdcommenter'
 " Auto Complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " remember  :CocCommand python.setInterpreter
-Plug 'godlygeek/tabular'
+Plug 'godlygeek/tabular'  " :Tabular/: or :Tabular/=
 
 " Markdown
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
@@ -188,7 +188,6 @@ Plug 'Yggdroot/indentLine'
 
 " Vim-airline
 Plug 'vim-airline/vim-airline'
-
 
 call plug#end()
 
@@ -282,6 +281,7 @@ let g:rainbow_active = 1
 "-------- -------- -------- -------- -------- --------
 let g:indentLine_color_term = 239
 let g:indentLine_char = '┊'
+let g:indentLine_concealcursor = ''
 
 
 " -------- -------- -------- -------- -------- --------

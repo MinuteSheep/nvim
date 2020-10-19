@@ -39,6 +39,8 @@ endif
 " -------- -------- -------- -------- -------- --------
 "  基本设置
 " -------- -------- -------- -------- -------- --------
+" 自动排版
+filetype indent on
 " 语法高亮
 syntax on
 " 让vim可以使用系统的剪切板
@@ -49,7 +51,7 @@ set relativenumber
 " 自动设当前编辑文件所在目录为当前工作目录
 " set autochdir
 " 高亮第81列
-set cc=81
+" set cc=81
 " tab大小
 set ts=4
 set expandtab
@@ -62,7 +64,6 @@ set backspace=indent,start
 " 开启真色,MacOs Terminal不需要开启真色
 " set termguicolors
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
 
 " -------- -------- -------- -------- -------- --------
 "  基本键位映射
@@ -97,6 +98,16 @@ function HeaderShell()
 endf
 autocmd bufnewfile *.sh call HeaderShell()
 
+
+" -------- -------- -------- -------- -------- --------
+"  QuickFix
+" -------- -------- -------- -------- -------- --------
+nmap <silent> cn :cn<cr>
+nmap <silent> cp :cp<cr>
+nmap <silent> cx :cclose<cr>
+nmap <silent> cl :cl<cr>
+nmap <silent> cc :cc<cr>
+nmap <silent> cw :cw<cr>
 
 "-------- -------- -------- -------- -------- --------
 " C,C++,Fortran,Python,java,sh等按R编译运行
@@ -161,12 +172,17 @@ Plug 'godlygeek/tabular'  " :Tabular/: or :Tabular/=
 " Markdown
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
+" LaTeX
+Plug 'lervag/vimtex'
+
 " Formatter
 Plug 'Chiel92/vim-autoformat'
 
 " Skin
-Plug 'theniceboy/vim-deus'
-
+Plug 'crusoexia/vim-monokai'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'jdkanani/vim-material-theme'
+Plug 'lycuid/vim-far'
 " File navigation
 if has('nvim')
         Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -184,7 +200,7 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'luochen1990/rainbow'
 
 " IndentLine
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 
 " Vim-airline
 Plug 'vim-airline/vim-airline'
@@ -209,9 +225,15 @@ let g:undotree_ShortIndicators = 1
 
 
 "-------- -------- -------- -------- -------- --------
+" LaTeX
+"-------- -------- -------- -------- -------- --------
+let g:tex_flavor = 'latex'
+let g:vimtex_quickfix_open_on_warning = 0
+
+"-------- -------- -------- -------- -------- --------
 " Coc
 "-------- -------- -------- -------- -------- --------
-let g:coc_global_extensions = ['coc-json', 'coc-vimlsp', 'coc-python','coc-clangd']
+let g:coc_global_extensions = ['coc-json', 'coc-texlab', 'coc-vimlsp', 'coc-python','coc-clangd']
 " TextEdit might fail if hidden is not set.
 set hidden
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
@@ -259,7 +281,7 @@ function! s:show_documentation()
         endif
 endfunction
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
@@ -279,9 +301,9 @@ let g:rainbow_active = 1
 "-------- -------- -------- -------- -------- --------
 " IndentLine
 "-------- -------- -------- -------- -------- --------
-let g:indentLine_color_term = 239
-let g:indentLine_char = '┊'
-let g:indentLine_concealcursor = ''
+" let g:indentLine_color_term = 239
+" let g:indentLine_char = '┊'
+" let g:indentLine_concealcursor = ''
 
 
 " -------- -------- -------- -------- -------- --------
@@ -317,5 +339,7 @@ highlight link BookmarkAnnotationLine SpellBad
 " -------- -------- -------- -------- -------- --------
 "  Skin
 " -------- -------- -------- -------- -------- --------
-" color deus
-" colorscheme molokai
+colorscheme far
+" set guicursor=n-v-c:hor100,i-ci-ve:ver25,r-cr:hor20,o:hor50
+                        " \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+                        " \,sm:block-blinkwait175-blinkoff150-blinkon175

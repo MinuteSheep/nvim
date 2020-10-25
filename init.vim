@@ -84,7 +84,8 @@ let mapleader=" "
 " -------- -------- -------- -------- -------- --------
 function HeaderPython()
         call setline(1, "#!/usr/bin/env python")
-        call append(1, "#-*- coding:UTF-8 -*-")
+        call append(1, "# -*- coding:UTF-8 -*-")
+        call append(1, "# Author: MinuteSheep<minutesheep@163.com>")
         normal G
         normal 3o
 endf
@@ -102,44 +103,14 @@ autocmd bufnewfile *.sh call HeaderShell()
 " -------- -------- -------- -------- -------- --------
 "  QuickFix
 " -------- -------- -------- -------- -------- --------
-nmap <silent> cn :cn<cr>
-nmap <silent> cp :cp<cr>
-nmap <silent> cx :cclose<cr>
-nmap <silent> cl :cl<cr>
-nmap <silent> cc :cc<cr>
-nmap <silent> cw :cw<cr>
+nmap <silent> cn :cn<cr>        " next error
+nmap <silent> cp :cp<cr>        " previous error
+nmap <silent> cx :cclose<cr>    " closse quicfix window
+nmap <silent> cl :cl<cr>        " list all errors
+nmap <silent> cc :cc<cr>        " show detailed error information
+nmap <silent> cw :cw<cr>        " open error window if has errors
+nmap <silent> co :copen<cr>     " open quickfix window
 
-"-------- -------- -------- -------- -------- --------
-" C,C++,Fortran,Python,java,sh等按R编译运行
-"-------- -------- -------- -------- -------- --------
-map R :call CompileAndRun()<CR>
-func! CompileAndRun()
-        exec "w"
-        if &filetype == 'c'
-                exec "!gcc % -o %< && ./%<"
-        elseif &filetype == 'cpp'
-                set splitbelow
-                exec "!g++ -std=c++11 % -Wall -o %< && ./%<"
-        elseif &filetype == 'java'
-                exec "!javac %"
-                exec "!time java %<"
-        elseif &filetype == 'sh'
-                :!time bash %
-        elseif &filetype == 'python'
-                exec "!python % "
-        elseif &filetype == 'html'
-                silent! exec "!chromium % &"
-        elseif &filetype == 'markdown'
-                exec "MarkdownPreview"
-        elseif &filetype == 'tex'
-                silent! exec "VimtexStop"
-                silent! exec "VimtexCompile"
-        elseif &filetype == 'go'
-                set splitbelow
-                :sp
-                :term go run %
-        endif
-endfunc
 
 
 " -------- -------- -------- -------- -------- --------
@@ -165,7 +136,7 @@ Plug 'AndrewRadev/switch.vim'  " press gs to switch ture/false
 Plug 'scrooloose/nerdcommenter'
 
 " Auto Complete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " remember  :CocCommand python.setInterpreter
 Plug 'godlygeek/tabular'  " :Tabular/: or :Tabular/=
 
@@ -205,7 +176,42 @@ Plug 'luochen1990/rainbow'
 " Vim-airline
 Plug 'vim-airline/vim-airline'
 
+" Asyncrun
+Plug 'skywind3000/asyncrun.vim'
 call plug#end()
+
+
+"-------- -------- -------- -------- -------- --------
+" C,C++,Fortran,Python,java,sh等按R编译运行
+"-------- -------- -------- -------- -------- --------
+map R :call CompileAndRun()<CR>
+func! CompileAndRun()
+        exec "w"
+        if &filetype == 'c'
+                exec "AsyncRun! gcc % -o %< && ./%<"
+        elseif &filetype == 'cpp'
+                set splitbelow
+                exec "AsyncRun! g++ -std=c++11 % -Wall -o %< && ./%<"
+        elseif &filetype == 'java'
+                exec "!javac %"
+                exec "!time java %<"
+        elseif &filetype == 'sh'
+                :!time bash %
+        elseif &filetype == 'python'
+                exec "AsyncRun! -raw python %"
+        elseif &filetype == 'html'
+                silent! exec "!chromium % &"
+        elseif &filetype == 'markdown'
+                exec "MarkdownPreview"
+        elseif &filetype == 'tex'
+                silent! exec "VimtexStop"
+                silent! exec "VimtexCompile"
+        elseif &filetype == 'go'
+                set splitbelow
+                :sp
+                :term go run %
+        endif
+endfunc
 
 
 " -------- -------- -------- -------- -------- --------
@@ -225,6 +231,13 @@ let g:undotree_ShortIndicators = 1
 
 
 "-------- -------- -------- -------- -------- --------
+" AsyncRun
+"-------- -------- -------- -------- -------- --------
+let g:asyncrun_exit=':copen | wincmd p'
+let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
+
+
+"-------- -------- -------- -------- -------- --------
 " LaTeX
 "-------- -------- -------- -------- -------- --------
 let g:tex_flavor = 'latex'
@@ -233,57 +246,57 @@ let g:vimtex_quickfix_open_on_warning = 0
 "-------- -------- -------- -------- -------- --------
 " Coc
 "-------- -------- -------- -------- -------- --------
-let g:coc_global_extensions = ['coc-json', 'coc-texlab', 'coc-vimlsp', 'coc-python','coc-clangd']
-" TextEdit might fail if hidden is not set.
-set hidden
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=100
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-                        \ pumvisible() ? "\<C-n>" :
-                        \ <SID>check_back_space() ? "\<TAB>" :
-                        \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" let g:coc_global_extensions = ['coc-json', 'coc-texlab', 'coc-vimlsp', 'coc-python','coc-clangd']
+" " TextEdit might fail if hidden is not set.
+" set hidden
+" " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" " delays and poor user experience.
+" set updatetime=100
+" " Don't pass messages to |ins-completion-menu|.
+" set shortmess+=c
+" " Use tab for trigger completion with characters ahead and navigate.
+" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" " other plugin before putting this into your config.
+" inoremap <silent><expr> <TAB>
+                        " \ pumvisible() ? "\<C-n>" :
+                        " \ <SID>check_back_space() ? "\<TAB>" :
+                        " \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-        inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-        inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
-nmap <silent> <leader>] <Plug>(coc-diagnostic-next)
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Show documentation in preview window.
-nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-        if (index(['vim','help'], &filetype) >= 0)
-                execute 'h '.expand('<cword>')
-        else
-                call CocAction('doHover')
-        endif
-endfunction
-" Highlight the symbol and its references when holding the cursor.
-" autocmd CursorHold * silent call CocActionAsync('highlight')
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+" function! s:check_back_space() abort
+        " let col = col('.') - 1
+        " return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" " position. Coc only does snippet and additional edit on confirm.
+" " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+" if exists('*complete_info')
+        " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" else
+        " inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" endif
+" " Use `[g` and `]g` to navigate diagnostics
+" " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+" nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
+" nmap <silent> <leader>] <Plug>(coc-diagnostic-next)
+" " GoTo code navigation.
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+" " Show documentation in preview window.
+" nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
+" function! s:show_documentation()
+        " if (index(['vim','help'], &filetype) >= 0)
+                " execute 'h '.expand('<cword>')
+        " else
+                " call CocAction('doHover')
+        " endif
+" endfunction
+" " Highlight the symbol and its references when holding the cursor.
+" " autocmd CursorHold * silent call CocActionAsync('highlight')
+" " Symbol renaming.
+" nmap <leader>rn <Plug>(coc-rename)
 
 
 "-------- -------- -------- -------- -------- --------
